@@ -1,0 +1,11 @@
+BusCodeEntity{busCode='00410023a', tranId='1'}
+BusCodeEntity{busCode='00410024b', tranId='2'}
+BusCodeEntity{busCode='00410025c', tranId='3'}
+BusCodeEntity{busCode='00410026d', tranId='4'}
+BusCodeEntity{busCode='00410027e', tranId='5'}
+BusCodeEntity{busCode='00410028f', tranId='6'}
+BusCodeEntity{busCode='00410029g', tranId='7'}
+BusCodeEntity{busCode='00410030h', tranId='8'}
+BusCodeEntity{busCode='00410031i', tranId='9'}
+BusCodeEntity{busCode='00410032j', tranId='10'}
+BusCodeEntity{busCode='00410033k', tranId='11'}
