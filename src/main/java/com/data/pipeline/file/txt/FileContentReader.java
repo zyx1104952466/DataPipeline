@@ -1,4 +1,4 @@
-package com.data.pipeline.file;
+package com.data.pipeline.file.txt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
