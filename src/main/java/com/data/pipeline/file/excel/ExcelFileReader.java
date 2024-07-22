@@ -12,6 +12,8 @@ import java.util.List;
 
 public class ExcelFileReader extends AbstractFileReader<List<String>> {
 
+    private static final int MAX_COLUMNS = 10;
+
     @Override
     protected List<List<String>> parseFile(InputStream inputStream, String filePath) throws IOException {
         List<List<String>> data = new ArrayList<>();
@@ -29,8 +31,8 @@ public class ExcelFileReader extends AbstractFileReader<List<String>> {
             Sheet sheet = workbook.getSheetAt(0);
             for (Row row : sheet) {
                 List<String> rowData = new ArrayList<>();
-                for (Cell cell : row) {
-                    rowData.add(getCellValueAsString(cell));
+                for (int i = 0; i < MAX_COLUMNS; i++) {
+                    rowData.add(getCellValueAsString(row.getCell(i)));
                 }
                 data.add(rowData);
             }
@@ -43,6 +45,11 @@ public class ExcelFileReader extends AbstractFileReader<List<String>> {
     }
 
     private String getCellValueAsString(Cell cell) {
+
+        if (null == cell) {
+            return "";
+        }
+
         switch (cell.getCellType()) {
             case STRING:
                 return cell.getStringCellValue();

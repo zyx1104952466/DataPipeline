@@ -31,7 +31,7 @@ public class TxtFileOperationsTest {
         try {
             // Example of reading from an absolute file path
             List<String> dataList = fileReader.readFile(SOURCE_TEMP_FILE_TXT);
-            dataList.forEach(line -> logger.info("解析后的结果：{}", line));
+            logger.info("解析后的结果：{}", dataList);
         } catch (IOException e) {
             logger.error("An error occurred: {}", e.getMessage());
         }
@@ -45,7 +45,7 @@ public class TxtFileOperationsTest {
         try {
             // Example of reading from an absolute file path
             List<String> dataList = fileReader.readFile(SOURCE_TEMP_FILE_TXT);
-            dataList.forEach(line -> logger.info("解析后的结果：{}", line));
+            logger.info("解析后的结果：{}", dataList);
 
             textFileWriter.writeFile(TARGET_TEMP_FILE_1_TXT, dataList, true);
         } catch (IOException e) {
@@ -61,12 +61,11 @@ public class TxtFileOperationsTest {
         try {
             // Read data from an absolute file path
             List<String> rawData = fileReader.readFile(SOURCE_TEMP_FILE_TXT);
+            logger.info("解析后rawData的结果：{}", rawData);
 
             // Parse the raw data into BusCodeEntity objects
             List<BusCodeEntity> parsedData = RegexBusCodeParser.parseData(rawData);
-
-            // Log each parsed BusCodeEntity
-            parsedData.forEach(busCodeEntity -> logger.info("Parsed result: {}", busCodeEntity));
+            logger.info("解析后的parsedData结果：{}", parsedData);
 
             // Convert the parsed data to strings
             List<String> parsedDataStrings = parsedData.stream()
@@ -91,7 +90,7 @@ public class TxtFileOperationsTest {
             // Parse the data
             List<BusCodeEntity> list = RegexBusCodeParser.parseData(dataList);
             list.forEach(busCodeEntity -> {
-                logger.info("busCode:{}", busCodeEntity.getBusCode());
+                logger.info("busCode：{}", busCodeEntity.getBusCode());
                 logger.info("tranId：{}", busCodeEntity.getTranId());
             });
         } catch (IOException e) {
