@@ -1,5 +1,6 @@
 package com.data.pipeline.file.excel;
 
+import com.data.pipeline.enums.FileTypeEnum;
 import com.data.pipeline.file.AbstractFileReader;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -20,9 +21,9 @@ public class ExcelFileReader extends AbstractFileReader<List<String>> {
         Workbook workbook = null;
 
         try {
-            if (filePath.endsWith(".xlsx")) {
+            if (filePath.endsWith(FileTypeEnum.XLSX.getType())) {
                 workbook = new XSSFWorkbook(inputStream);
-            } else if (filePath.endsWith(".xls")) {
+            } else if (filePath.endsWith(FileTypeEnum.XLS.getType())) {
                 workbook = new HSSFWorkbook(inputStream);
             } else {
                 throw new IllegalArgumentException("The specified file is not Excel file");
@@ -57,7 +58,8 @@ public class ExcelFileReader extends AbstractFileReader<List<String>> {
                 if (DateUtil.isCellDateFormatted(cell)) {
                     return cell.getDateCellValue().toString();
                 } else {
-                    return Double.toString(cell.getNumericCellValue());
+                    DataFormatter formatter = new DataFormatter();
+                    return formatter.formatCellValue(cell);
                 }
             case BOOLEAN:
                 return Boolean.toString(cell.getBooleanCellValue());

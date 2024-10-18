@@ -1,5 +1,6 @@
 package com.data.pipeline.file.excel;
 
+import com.data.pipeline.enums.FileTypeEnum;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -48,10 +49,10 @@ public class ExcelFileWriter {
         }
     }
 
-    private Workbook createWorkbook(String filePath) throws IOException {
-        if (filePath.endsWith(".xlsx")) {
+    private Workbook createWorkbook(String filePath) {
+        if (filePath.endsWith(FileTypeEnum.XLSX.getType())) {
             return new XSSFWorkbook();
-        } else if (filePath.endsWith(".xls")) {
+        } else if (filePath.endsWith(FileTypeEnum.XLS.getType())) {
             return new HSSFWorkbook();
         } else {
             throw new IllegalArgumentException("Unsupported file format: " + filePath);
