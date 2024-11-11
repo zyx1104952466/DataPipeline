@@ -9,6 +9,16 @@ import java.util.List;
 
 public abstract class AbstractFileReader<T> {
 
+    private String CHARSET = "GB2312";
+
+    public String getCHARSET() {
+        return CHARSET;
+    }
+
+    public void setCHARSET(String CHARSET) {
+        this.CHARSET = CHARSET;
+    }
+
     public List<T> readFile(String filePath) throws IOException {
         Path path = Paths.get(filePath);
         if (Files.exists(path)) {

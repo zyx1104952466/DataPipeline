@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 public class HttpRequestExample {
 
     private static final String POST_URL = "http://ysusernew.ysepay.com:18020/manager/feeMethod.do?method=list";
+//    private static final String POST_PARAMS = "usercode1=Y156851154099854&trantype1=321&fristFlag=1"; // 应该根据实际情况更改
     private static final String POST_PARAMS = "usercode1=Y156851154099854&trantype1=321&fristFlag=1"; // 应该根据实际情况更改
 
     /**
@@ -26,6 +27,23 @@ public class HttpRequestExample {
     public static String sendPostRequest() {
         try {
             return HttpSender.sendPostRequest(POST_URL, POST_PARAMS);
+        } catch (IOException e) {
+            // Log the error
+            System.out.println("Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 发送 GET 请求并打印响应内容。
+     *
+     * @return 响应内容字符串
+     */
+    public static String sendGetRequest() {
+        try {
+            String GET_URL = "http://ysusernew.ysepay.com:16080/boss_manager/urmtminf.do?method=detail&mercId=%s";
+            GET_URL = String.format(GET_URL, "826121650460011");
+            return HttpSender.sendGetRequest(GET_URL, POST_PARAMS);
         } catch (IOException e) {
             // Log the error
             System.out.println("Error: " + e.getMessage());
@@ -83,6 +101,7 @@ public class HttpRequestExample {
     }
 
     public static void main(String[] args) {
-        parseHtmlResponse(sendPostRequest());
+//        parseHtmlResponse(sendPostRequest());
+        parseHtmlResponse(sendGetRequest());
     }
 }

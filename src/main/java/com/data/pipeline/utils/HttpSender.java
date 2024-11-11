@@ -11,7 +11,7 @@ import java.net.URL;
  */
 public class HttpSender {
 
-    private static final String COOKIE = "JSESSIONID=BD395613B2EFDBB3C2D250B92E9A79EA; hikefa_ticket=\"xbfu1hfKNGmzRAYHKDGwuGyDIkEhr8QyNXXQ4IOOrZLpdD1CVOoioTLmOVFkBWAVF8DvBdd27dmYIrbcz3YMNa7KXy3x+D/lJIs0slddy07DraQUvemwglF7yC3Kwn0+qcgbf79VY1lH5St0d/hvptFvbcPOE/vSijyC0YYCpn9G5I+VCDGmt+Lna8/TNlJykOL6yh0phdpYH05jiz1HQAI6O+jjKym6S7DcMCU+tKkXffLryl0pvY0bvPRphKmmXeuA4I8Qpko=\"";
+    private static final String COOKIE = "JSESSIONID=FDE39B9BCBD12D40AF66ECCE652826E1; hikefa_ticket=\"xbfu1hfKNGmzRAYHKDGwuGyDIkEhr8QyNXXQ4IOOrZImWWBB0zChN4QiGWLe6V01F8DvBdd27dkgLK6rFLctoO1Dc8m0CTo22VgqxJBLypXzfV7ZAKMDnwj9vJkoyD9CTfbcp0juXPH4vqU+y4rQWwS6mRo9VEf9m3H61kEb494hn8s3LOjUkhudfIiksRP7GVh4BZKyboPmzKm0U4MCox/X+fra4QqrXObF9eobrRycNWthQqUYlwftXblfGSW9mBSWnY0jJr4ssHnYxIwvDw==\"";
 
     /**
      * 创建一个新的 HTTP 连接。
@@ -40,7 +40,7 @@ public class HttpSender {
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
         connection.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
         connection.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3");
-        connection.setRequestProperty("Content-Length", Integer.toString(params.getBytes().length));
+//        connection.setRequestProperty("Content-Length", Integer.toString(params.getBytes().length));
         connection.setRequestProperty("Cookie", COOKIE);
     }
 
@@ -89,6 +89,29 @@ public class HttpSender {
             connection = createConnection(url, "POST");
             setRequestProperties(connection, body);
             writeRequestBody(connection, body);
+            return readResponse(connection);
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
+    /**
+     * 发送 GET 请求。
+     *
+     * @param url     请求 URL
+     * @param body    请求体内容
+     * @return 响应内容字符串
+     * @throws IOException 如果发送请求失败
+     */
+    public static String sendGetRequest(String url, String body) throws IOException {
+        HttpURLConnection connection = null;
+        try {
+            connection = createConnection(url, "GET");
+            setRequestProperties(connection, body);
             return readResponse(connection);
         } catch (IOException e) {
             throw e;

@@ -13,7 +13,7 @@ public class TextFileReader extends AbstractFileReader<String> {
 
     @Override
     protected List<String> parseFile(InputStream inputStream, String filePath) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, getCHARSET()))) {
             return reader.lines().collect(Collectors.toList());
         }
     }
