@@ -23,7 +23,7 @@ public class SqlGenerateIsMercUpdateTimeTest extends BaseFileOperations {
     @Test
     public void testGenerateSql() throws IOException {
 
-        List<String> list = txtFileReader.readFile(SOURCE_FILE);
+        List<String> list = textFileReader.readFile(SOURCE_FILE);
 
         if (list != null) {
             List<String> sqlList = list.stream().map(s -> String.format(TARGET_SQL, s.replace(" ", ""))).collect(Collectors.toList());
@@ -40,7 +40,7 @@ public class SqlGenerateIsMercUpdateTimeTest extends BaseFileOperations {
                 }
                 if (count % 5000 == 0) {
                     Optional<String> fileName = Optional.of(String.format(TARGET_FILE, fileCount));
-                    txtFileWriter.writeFile(fileName.orElse("temp/需要修复小数进位规则标识的数据.sql"), fileDataList,
+                    textFileWriter.writeFile(fileName.orElse("temp/需要修复小数进位规则标识的数据.sql"), fileDataList,
                         false);
                     fileCount++;
                     fileDataList = new ArrayList<>();
@@ -53,7 +53,7 @@ public class SqlGenerateIsMercUpdateTimeTest extends BaseFileOperations {
                 // 添加最后一次的提交语句
                 fileDataList.add("COMMIT;");
                 Optional<String> fileName = Optional.of(String.format(TARGET_FILE, fileCount));
-                txtFileWriter.writeFile(fileName.orElse("temp/需要修复小数进位规则标识的数据.sql"), fileDataList, false);
+                textFileWriter.writeFile(fileName.orElse("temp/需要修复小数进位规则标识的数据.sql"), fileDataList, false);
             }
         }
     }

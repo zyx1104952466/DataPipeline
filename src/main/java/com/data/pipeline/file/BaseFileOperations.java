@@ -1,6 +1,6 @@
 package com.data.pipeline.file;
 
-import com.data.pipeline.file.business.SqlCovert;
+import com.data.pipeline.file.business.SqlConverter;
 import com.data.pipeline.file.csv.CsvFileReader;
 import com.data.pipeline.file.excel.ExcelFileReader;
 import com.data.pipeline.file.excel.ExcelFileWriter;
@@ -20,96 +20,105 @@ import java.util.stream.Collectors;
  */
 public class BaseFileOperations {
 
-    public static final Logger logger = LogManager.getLogger(BaseFileOperations.class);
+    public static final Logger LOGGER = LogManager.getLogger(BaseFileOperations.class);
+
+    /** 文本文件读取器 */
+    public final AbstractFileReader<String> textFileReader = new TextFileReader();
+
+    /** Excel文件读取器 */
+    public final AbstractFileReader<List<String>> excelFileReader = new ExcelFileReader();
+
+    /** 文本文件写入器 */
+    public final TextFileWriter textFileWriter = new TextFileWriter();
+
+    /** Excel文件写入器 */
+    public final ExcelFileWriter excelFileWriter = new ExcelFileWriter();
+
+    /** CSV文件读取器 */
+    public final AbstractFileReader<String[]> csvFileReader = new CsvFileReader();
 
     /**
-     * Txt文件读取类
+     * 根据给定的模板和数据生成SQL脚本，并写入到目标文件中
+     *
+     * @param dataRows 数据行列表
+     * @param template SQL模板
+     * @param targetFile 目标文件路径格式化字符串
+     * @param sqlConverter SQL转换器
+     * @throws IOException 如果发生I/O错误
      */
-    public AbstractFileReader<String> txtFileReader = new TextFileReader();
+    public void generateSqlScripts(List<String[]> dataRows, String template, String targetFile, SqlConverter sqlConverter) throws IOException {
 
-    /**
-     * Excel文件读取类
-     */
-    public AbstractFileReader<List<String>> excelFileReader = new ExcelFileReader();
+        LOGGER.info("Generating SQL scripts...");
+        LOGGER.info("template: {}", template);
+        LOGGER.info("targetFile: {}", targetFile);
 
-    /**
-     * Txt文件写入类
-     */
-    public TextFileWriter txtFileWriter = new TextFileWriter();
-
-    /**
-     * Excel文件写入类
-     */
-    public ExcelFileWriter excelFileWriter = new ExcelFileWriter();
-
-    /**
-     * CSV文件读取类
-     */
-    public AbstractFileReader<String[]> csvFileReader = new CsvFileReader();
-
-    public void generateScript(List<String[]> list, String sqlTemplate, String targetFile, SqlCovert sqlCovert) throws IOException {
-
-        // 2、生成sql
-        List<String> sqlList = list.stream().map(split -> sqlCovert.covertSql(sqlTemplate, split)).collect(Collectors.toList());
-
-        // 3、生成脚本文件（每500条添加一个commit，每5000条生成一个文件）
-        generatePagingSqlScript(sqlList, targetFile);
+        List<String> sqlStatements = dataRows.stream()
+            .map(row -> sqlConverter.convertToSql(template, row))
+            .collect(Collectors.toList());
+        this.writePaginatedSqlScripts(sqlStatements, targetFile);
     }
 
     /**
-     * 分页生成sql脚本文件
+     * 将SQL语句以分页形式写入到文件中
      *
-     * @param sqlList     sql集合
-     * @param TARGET_FILE 目标文件
-     * @throws IOException IO异常
+     * @param sqlStatements SQL语句列表
+     * @param targetFilePathFormat 目标文件路径格式化字符串
+     * @throws IOException 如果发生I/O错误
      */
-    public void generatePagingSqlScript(List<String> sqlList, String TARGET_FILE) throws IOException {
+    private void writePaginatedSqlScripts(List<String> sqlStatements, String targetFilePathFormat) throws IOException {
 
-        if (null == sqlList) {
-            logger.error("sqlList is null");
+        LOGGER.info("Writing paginated SQL scripts...");
+
+        if (sqlStatements == null) {
+            LOGGER.error("SQL statements list is null.");
             return;
         }
 
-        // 每500条添加一个commit，每5000条生成一个文件
-        int count = 1;
-        int fileCount = 1;
+        int statementIndex = 1;
+        int fileIndex = 1;
+        List<String> currentFileContent = new ArrayList<>();
 
-        List<String> fileDataList = new ArrayList<>();
-
-        for (String s : sqlList) {
-            fileDataList.add(s);
-            if (count % 500 == 0) {
-                fileDataList.add("COMMIT;");
+        for (String sql : sqlStatements) {
+            currentFileContent.add(sql);
+            if (statementIndex % 500 == 0) {
+                currentFileContent.add("COMMIT;");
             }
-            if (count % 5000 == 0) {
-                txtFileWriter.writeFile(String.format(TARGET_FILE, fileCount), fileDataList, false);
-                fileCount++;
-                fileDataList = new ArrayList<>();
+            if (statementIndex % 5000 == 0) {
+                LOGGER.info("Writing SQL scripts to file: {}", fileIndex);
+                textFileWriter.writeFile(String.format(targetFilePathFormat, fileIndex), currentFileContent, false);
+                fileIndex++;
+                currentFileContent.clear();
             }
-            count++;
+            statementIndex++;
         }
 
-        // 如果fileDataList中还有剩余的数据，写入最后一个文件
-        if (!fileDataList.isEmpty()) {
-            // 添加最后一次的提交语句
-            fileDataList.add("COMMIT;");
-            txtFileWriter.writeFile(String.format(TARGET_FILE, fileCount), fileDataList, false);
+        if (!currentFileContent.isEmpty()) {
+            currentFileContent.add("COMMIT;");
+            LOGGER.info("Writing SQL scripts to file: {}", fileIndex);
+            textFileWriter.writeFile(String.format(targetFilePathFormat, fileIndex), currentFileContent, false);
         }
+        LOGGER.info("SQL scripts generation completed.");
     }
 
-    public String createTargetFile(String targetSuffix) {
-        return getFileDirectory() + getSourceFile().replace(getFileSuffix(), targetSuffix);
+    /**
+     * 创建目标文件路径
+     *
+     * @param targetSuffix 目标文件后缀
+     * @return 完整的目标文件路径
+     */
+    protected String createTargetFilePath(String targetSuffix) {
+        return getDirectoryPath() + getSourceFileName().replace(getSourceFileSuffix(), targetSuffix);
     }
 
-    public String getSourceFile() {
-        return null;
+    protected String getSourceFileName() {
+        throw new UnsupportedOperationException("Method getSourceFileName() should be implemented by subclass.");
     }
 
-    public String getFileDirectory() {
-        return null;
+    protected String getDirectoryPath() {
+        throw new UnsupportedOperationException("Method getSourceFileName() should be implemented by subclass.");
     }
 
-    public String getFileSuffix() {
-        return null;
+    protected String getSourceFileSuffix() {
+        throw new UnsupportedOperationException("Method getSourceFileName() should be implemented by subclass.");
     }
 }

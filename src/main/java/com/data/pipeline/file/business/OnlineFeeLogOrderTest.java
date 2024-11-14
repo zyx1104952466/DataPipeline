@@ -22,7 +22,7 @@ public class OnlineFeeLogOrderTest extends BaseFileOperations {
     @Test
     public void testReadFileContentOrder() {
         try {
-            List<String> dataList = txtFileReader.readFile(SOURCE_FILE_DIRECTORY + FILE_ORDER_NAME);
+            List<String> dataList = textFileReader.readFile(SOURCE_FILE_DIRECTORY + FILE_ORDER_NAME);
 
             // 过滤掉不符合条件的数据
             dataList = dataList.stream().filter(line -> line.contains("计费参数：")).collect(Collectors.toList());
@@ -46,7 +46,7 @@ public class OnlineFeeLogOrderTest extends BaseFileOperations {
 
             excelFileWriter.writeExcelFile("temp/online_fee_order_log.xlsx", rowData, true);
         } catch (IOException e) {
-            logger.error("An error occurred: {}", e.getMessage());
+            LOGGER.error("An error occurred: {}", e.getMessage());
         }
     }
 
@@ -56,16 +56,16 @@ public class OnlineFeeLogOrderTest extends BaseFileOperations {
     @Test
     public void testReadFileContentOrderToTxt() {
         try {
-            List<String> dataList = txtFileReader.readFile(SOURCE_FILE_DIRECTORY + FILE_ORDER_NAME);
+            List<String> dataList = textFileReader.readFile(SOURCE_FILE_DIRECTORY + FILE_ORDER_NAME);
 
             // 过滤掉不符合条件的数据
             dataList = dataList.stream().filter(line -> line.contains("计费参数：")).collect(Collectors.toList());
 
             List<String> list = RegexParser.parseDataByString(dataList);
 
-            txtFileWriter.writeFile("temp/online_fee_order_log.txt", list, true);
+            textFileWriter.writeFile("temp/online_fee_order_log.txt", list, true);
         } catch (IOException e) {
-            logger.error("An error occurred: {}", e.getMessage());
+            LOGGER.error("An error occurred: {}", e.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class OnlineFeeLogOrderTest extends BaseFileOperations {
     @Test
     public void testReadFileContentOrder2() {
         try {
-            List<String> dataList = txtFileReader.readFile(SOURCE_FILE_DIRECTORY);
+            List<String> dataList = textFileReader.readFile(SOURCE_FILE_DIRECTORY);
             // 过滤掉不符合条件的数据
             dataList = dataList.stream().filter(line -> line.contains("计费参数：")).collect(Collectors.toList());
             List<FeeEntity> list = RegexParser.parseData(dataList);
@@ -105,7 +105,7 @@ public class OnlineFeeLogOrderTest extends BaseFileOperations {
             //            excelFileWriter.writeExcelFile("temp/online_fee_log_paymode_02_12.xlsx", rowData, true);
             //            excelFileWriter.writeExcelFile("temp/online_fee_log_paymode_00_10.xlsx", rowData, true);
         } catch (IOException e) {
-            logger.error("An error occurred: {}", e.getMessage());
+            LOGGER.error("An error occurred: {}", e.getMessage());
         }
     }
 }

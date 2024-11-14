@@ -45,7 +45,7 @@ public class SqlGenerateTest extends BaseFileOperations {
             writeDataList.forEach(list -> {
                 String targetSql = SqlGenerate.generateRollbackSql(list.get(0), list.get(1));
                 sqlList.add(targetSql);
-                logger.info("生成的sql语句：{}", targetSql);
+                LOGGER.info("生成的sql语句：{}", targetSql);
                 if (count.addAndGet(1) % 500 == 0) {
                     sqlList.add("COMMIT;");
                 }
@@ -55,7 +55,7 @@ public class SqlGenerateTest extends BaseFileOperations {
             TextFileWriter textFileWriter = new TextFileWriter();
             textFileWriter.writeFile("temp/配错业务代码_理财POS的计费配置-回滚.txt", sqlList, true);
         } catch (IOException e) {
-            logger.info("An error occurred: " + e.getMessage());
+            LOGGER.info("An error occurred: " + e.getMessage());
         }
     }
 }

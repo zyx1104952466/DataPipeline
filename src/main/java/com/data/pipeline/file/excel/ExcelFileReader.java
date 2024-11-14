@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ExcelFileReader extends AbstractFileReader<List<String>> {
 
-    private static final int MAX_COLUMNS = 20;
+    private static final int MAX_COLUMNS = 30;
 
     @Override
     protected List<List<String>> parseFile(InputStream inputStream, String filePath) throws IOException {

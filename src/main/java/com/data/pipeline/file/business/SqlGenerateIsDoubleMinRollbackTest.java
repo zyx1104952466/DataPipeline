@@ -46,7 +46,7 @@ public class SqlGenerateIsDoubleMinRollbackTest extends BaseFileOperations {
                 }
                 if (count % 5000 == 0) {
                     Optional<String> fileName = Optional.of(String.format(TARGET_FILE, fileCount));
-                    txtFileWriter.writeFile(fileName.orElse("temp/需要修复小数进位规则标识的数据.sql"), fileDataList,
+                    textFileWriter.writeFile(fileName.orElse("temp/需要修复小数进位规则标识的数据.sql"), fileDataList,
                         false);
                     fileCount++;
                     fileDataList = new ArrayList<>();
@@ -59,7 +59,7 @@ public class SqlGenerateIsDoubleMinRollbackTest extends BaseFileOperations {
                 // 添加最后一次的提交语句
                 fileDataList.add("COMMIT;");
                 Optional<String> fileName = Optional.of(String.format(TARGET_FILE, fileCount));
-                txtFileWriter.writeFile(fileName.orElse("temp/需要修复小数进位规则标识的数据.sql"), fileDataList, false);
+                textFileWriter.writeFile(fileName.orElse("temp/需要修复小数进位规则标识的数据.sql"), fileDataList, false);
             }
         }
     }

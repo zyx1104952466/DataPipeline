@@ -14,38 +14,26 @@ import java.util.List;
  */
 public class UrmtmfeeBaseAreaFlagTestCase extends BaseFileOperations {
 
-    public static final String FileDirectory = "E:\\日常迭代\\计费重构二期\\计费配置比对差异需治理的计费配置数据\\";
-
-    /**
-     * 源端文件路径
-     */
-    public static final String SOURCE_FILE = "20241109-银联二维码配置了境外卡的计费配置明细.csv";
-
-    /**
-     * 文件后缀(CSV)
-     */
-    public static final String FILE_SUFFIX_CSV = ".csv";
-
     /**
      * 目标sql（修改数据的sql）
      */
-    private final String targetSql =
+    private static final String targetSql =
         "UPDATE YSPOS_BOSS.URMTMFEE_BASE t SET t.AREA_FLAG = '0', t.UPDATE_TIME = SYSDATE WHERE t.RATE_ID = '%s' AND t.MERC_ID = '%s' AND t.AREA_FLAG = '1';";
 
     /**
      * 回滚sql（回滚数据的sql）
      */
-    private final String targetRollBackSql =
+    private static final String targetRollBackSql =
         "UPDATE YSPOS_BOSS.URMTMFEE_BASE t SET t.AREA_FLAG = '1', t.UPDATE_TIME = SYSDATE WHERE t.RATE_ID = '%s' AND t.MERC_ID = '%s' AND t.AREA_FLAG = '0';";
 
     @Test
     public void testGenerateSql() throws IOException {
         // 1、读取文件
-        List<String[]> list = csvFileReader.readFile(getFileDirectory() + getSourceFile());
+        List<String[]> list = csvFileReader.readFile(getDirectoryPath() + getSourceFileName());
         // 2、生成数据sql
-        generateScript(list, targetSql, createTargetFile("_%s.sql"), UrmtmfeeBaseAreaFlagTestCase::covertSql);
+        generateSqlScripts(list, targetSql, createTargetFilePath("_%s.sql"), UrmtmfeeBaseAreaFlagTestCase::covertSql);
         // 3、生成回滚数据sql
-        generateScript(list, targetRollBackSql, createTargetFile("_回滚_%s.sql"), UrmtmfeeBaseAreaFlagTestCase::covertRollBackSql);
+        generateSqlScripts(list, targetRollBackSql, createTargetFilePath("_回滚_%s.sql"), UrmtmfeeBaseAreaFlagTestCase::covertRollBackSql);
     }
 
     /**
@@ -74,15 +62,30 @@ public class UrmtmfeeBaseAreaFlagTestCase extends BaseFileOperations {
         return String.format(sqlTemplate, rateId, mercId);
     }
 
-    public String getSourceFile() {
-        return SOURCE_FILE;
+    /**
+     * 源文件名
+     *
+     * @return 源文件名
+     */
+    public String getSourceFileName() {
+        return "20241109-银联二维码配置了境外卡的计费配置明细.csv";
     }
 
-    public String getFileDirectory() {
-        return FileDirectory;
+    /**
+     * 文件目录
+     *
+     * @return 文件目录
+     */
+    public String getDirectoryPath() {
+        return "E:\\日常迭代\\计费重构二期\\计费配置比对差异需治理的计费配置数据 - 副本\\";
     }
 
-    public String getFileSuffix() {
-        return FILE_SUFFIX_CSV;
+    /**
+     * 文件后缀
+     *
+     * @return 文件后缀
+     */
+    public String getSourceFileSuffix() {
+        return ".csv";
     }
 }

@@ -44,7 +44,7 @@ public class OnlineFeeConfigPayMode01And11Test extends BaseFileOperations {
                     String newKey = rowNew.get(0) + "-" + rowNew.get(2) + "-" + rowNew.get(3);
                     String newValue = rowNew.get(4) + "-" + rowNew.get(5);
                     if (oldKey.equals(newKey) && !oldValue.equals(newValue)) {
-                        logger.info("模板编号: {}, 01-网银PC费率: {}, 11-网银手机费率: {}", newKey, oldValue, newValue);
+                        LOGGER.info("模板编号: {}, 01-网银PC费率: {}, 11-网银手机费率: {}", newKey, oldValue, newValue);
                         List<String> row1 = new ArrayList<>();
                         row1.add(rowNew.get(0));
                         row1.add(rowNew.get(2));
@@ -58,7 +58,7 @@ public class OnlineFeeConfigPayMode01And11Test extends BaseFileOperations {
 
             excelFileWriter.writeExcelFile("temp/存在网银PC以及手机区别的计费配置（模板编号-行别-银行账户类型）.xlsx", newDataList, true);
         } catch (IOException e) {
-            logger.error("An error occurred: {}", e.getMessage());
+            LOGGER.error("An error occurred: {}", e.getMessage());
         }
     }
 }

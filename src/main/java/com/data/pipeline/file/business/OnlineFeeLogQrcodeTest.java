@@ -24,7 +24,7 @@ public class OnlineFeeLogQrcodeTest extends BaseFileOperations {
     @Test
     public void testReadFileContent() {
         try {
-            List<String> dataList = txtFileReader.readFile(SOURCE_FILE_DIRECTORY + FILE_QRCODE_NAME);
+            List<String> dataList = textFileReader.readFile(SOURCE_FILE_DIRECTORY + FILE_QRCODE_NAME);
 
             // 过滤掉不符合条件的数据
             dataList = dataList.stream().filter(line -> line.contains("计费参数：")).collect(Collectors.toList());
@@ -48,7 +48,7 @@ public class OnlineFeeLogQrcodeTest extends BaseFileOperations {
 
             excelFileWriter.writeExcelFile("temp/online_fee_log.xlsx", rowData, true);
         } catch (IOException e) {
-            logger.error("An error occurred: {}", e.getMessage());
+            LOGGER.error("An error occurred: {}", e.getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ public class OnlineFeeLogQrcodeTest extends BaseFileOperations {
     @Test
     public void testReadFileContent1() {
         try {
-            List<String> dataList = txtFileReader.readFile(SOURCE_FILE_DIRECTORY + FILE_QRCODE_NAME);
+            List<String> dataList = textFileReader.readFile(SOURCE_FILE_DIRECTORY + FILE_QRCODE_NAME);
 
             // 过滤掉不符合条件的数据
             dataList = dataList.stream().filter(line -> line.contains("计费参数：")).collect(Collectors.toList());
@@ -74,7 +74,7 @@ public class OnlineFeeLogQrcodeTest extends BaseFileOperations {
 
             // 按照次数排序，从大到小，并且每个key单独打印一行
             map.entrySet().stream().sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue()))
-                .forEach(entry -> logger.info("key: {}, value: {}", entry.getKey(), entry.getValue()));
+                .forEach(entry -> LOGGER.info("key: {}, value: {}", entry.getKey(), entry.getValue()));
 
             List<List<String>> rowData = new ArrayList<>();
             for (Map.Entry<String, Integer> entry : map.entrySet()) {
@@ -92,7 +92,7 @@ public class OnlineFeeLogQrcodeTest extends BaseFileOperations {
 
             excelFileWriter.writeExcelFile("temp/online_fee_qrcode_log_enum.xlsx", rowData, true);
         } catch (IOException e) {
-            logger.error("An error occurred: {}", e.getMessage());
+            LOGGER.error("An error occurred: {}", e.getMessage());
         }
     }
 
@@ -102,16 +102,16 @@ public class OnlineFeeLogQrcodeTest extends BaseFileOperations {
     @Test
     public void testReadFileContentOrderToTxt() {
         try {
-            List<String> dataList = txtFileReader.readFile(SOURCE_FILE_DIRECTORY + FILE_QRCODE_NAME);
+            List<String> dataList = textFileReader.readFile(SOURCE_FILE_DIRECTORY + FILE_QRCODE_NAME);
 
             // 过滤掉不符合条件的数据
             dataList = dataList.stream().filter(line -> line.contains("计费参数：")).collect(Collectors.toList());
 
             List<String> list = RegexParser.parseDataByString(dataList);
 
-            txtFileWriter.writeFile("temp/online_fee_qrcode_log.txt", list, true);
+            textFileWriter.writeFile("temp/online_fee_qrcode_log.txt", list, true);
         } catch (IOException e) {
-            logger.error("An error occurred: {}", e.getMessage());
+            LOGGER.error("An error occurred: {}", e.getMessage());
         }
     }
 }

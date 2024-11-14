@@ -21,7 +21,7 @@ public class OnlineFeeConfigDeficiencyTest extends BaseFileOperations {
 
     @Test
     public void test() throws IOException {
-        List<String> list = txtFileReader.readFile(SOURCE_FILE);
+        List<String> list = textFileReader.readFile(SOURCE_FILE);
         list = list.stream().filter(s -> s.toString().contains("计费配置匹配失败(有模板未命中)")).collect(Collectors.toList());
         for (String log : list) {
             FeeRequestBO feeRequestBO = FeeRequestBO.parseFromLog(log);

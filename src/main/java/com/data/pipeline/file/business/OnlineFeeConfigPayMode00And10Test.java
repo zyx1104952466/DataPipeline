@@ -31,10 +31,10 @@ public class OnlineFeeConfigPayMode00And10Test extends BaseFileOperations {
             List<List<String>> list00 =
                 dataList.stream().filter(row -> "00".equals(row.get(1))).collect(Collectors.toList());
 
-            logger.info("list00: {}", list00);
+            LOGGER.info("list00: {}", list00);
             List<List<String>> list10 =
                 dataList.stream().filter(row -> "10".equals(row.get(1))).collect(Collectors.toList());
-            logger.info("list10: {}", list10);
+            LOGGER.info("list10: {}", list10);
 
             List<List<String>> newDataList = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class OnlineFeeConfigPayMode00And10Test extends BaseFileOperations {
                     String newKey = rowNew.get(0) + "-" + rowNew.get(2) + "-" + rowNew.get(3);
                     String newValue = rowNew.get(4) + "-" + rowNew.get(5);
                     if (oldKey.equals(newKey) && !oldValue.equals(newValue)) {
-                        logger.info("模板编号: {}, 00-平台账户PC费率: {}, 10-平台账户手机费率: {}", newKey, oldValue,
+                        LOGGER.info("模板编号: {}, 00-平台账户PC费率: {}, 10-平台账户手机费率: {}", newKey, oldValue,
                             newValue);
                         List<String> row1 = new ArrayList<>();
                         row1.add(rowNew.get(0));
@@ -63,7 +63,7 @@ public class OnlineFeeConfigPayMode00And10Test extends BaseFileOperations {
             excelFileWriter.writeExcelFile("temp/存在平台账户PC以及手机区别的计费配置（模板编号-行别-银行账户类型）.xlsx",
                 newDataList, true);*/
         } catch (IOException e) {
-            logger.error("An error occurred: {}", e.getMessage());
+            LOGGER.error("An error occurred: {}", e.getMessage());
         }
     }
 }
